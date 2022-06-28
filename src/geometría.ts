@@ -1,18 +1,18 @@
-interface Pt {
+export interface Pt {
     x: number,
     y: number,
     z?: number,
 }
 
-interface Transformación extends Pt {
+export interface Transformación extends Pt {
     origin: Pt,
 }
 
-interface Rotación extends Transformación {
+export interface Rotación extends Transformación {
     grados: number,
 }
 
-class Punto {
+export class Punto {
     #x: number;
     #y: number;
     #z: number;
@@ -59,7 +59,7 @@ class Punto {
 
 }
 
-class Puntos {
+export class Puntos {
     #listado: Punto[];
 
     constructor(pts: Punto[]) {
@@ -99,7 +99,7 @@ class Puntos {
 
 }
 
-class Plano {
+export class Plano {
     #pts: Puntos;
     #origen: Pt;
     constructor(data: { pts: Puntos, origen: Pt }) {
@@ -121,7 +121,6 @@ class Plano {
     }
 }
 
-
 export class Cuadrado extends Plano {
     constructor(data: { tamaño: number, origen?: Pt }) {
         let pts: Punto[] | Puntos = [];
@@ -142,6 +141,27 @@ export class Cuadrado extends Plano {
             pts.push(new Punto(pt));
         }
         
+        pts = new Puntos(pts);
+
+        super({ pts, origen })
+    }
+}
+
+
+export class Cuadrado extends Plano {
+    constructor(data: { tamaño: number, origen?: Pt }) {
+        let pts: Punto[] | Puntos = [];
+        let { tamaño, origen } = data;
+        origen = origen ? origen : { x: 0, y: 0 };
+        for (let i = 0; i < 4; i++) {
+            const pt = { x: origen.x, y: origen.y };
+            if (i > 0) { pt.x += tamaño; }
+            if (i > 1) { pt.y += tamaño; }
+            if (i === 3) { pt.x = origen.x }
+
+            pts.push(new Punto(pt));
+        }
+
         pts = new Puntos(pts);
 
         super({ pts, origen })
