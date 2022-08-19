@@ -1,1 +1,3 @@
-import { Cuadrado } from "./geometría";
+import { Cuadrado } from "./gráficos/cuadrado";
+
+export { Cuadrado } 

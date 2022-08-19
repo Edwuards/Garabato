@@ -74,9 +74,7 @@ export class Puntos {
         return this.#listado.reduce((min, pt) => { return Math.max(min, pt[eje]) }, 0)
     }
 
-    obtener(índice?: number) {
-        return índice ? this.#listado[índice] : this.#listado;
-    }
+    obtener() { return this.#listado }
 
     actualizar(data: Punto[] | { pt: Punto, índice: number }) {
         if (Array.isArray(data)) {
@@ -141,27 +139,6 @@ export class Cuadrado extends Plano {
             pts.push(new Punto(pt));
         }
         
-        pts = new Puntos(pts);
-
-        super({ pts, origen })
-    }
-}
-
-
-export class Cuadrado extends Plano {
-    constructor(data: { tamaño: number, origen?: Pt }) {
-        let pts: Punto[] | Puntos = [];
-        let { tamaño, origen } = data;
-        origen = origen ? origen : { x: 0, y: 0 };
-        for (let i = 0; i < 4; i++) {
-            const pt = { x: origen.x, y: origen.y };
-            if (i > 0) { pt.x += tamaño; }
-            if (i > 1) { pt.y += tamaño; }
-            if (i === 3) { pt.x = origen.x }
-
-            pts.push(new Punto(pt));
-        }
-
         pts = new Puntos(pts);
 
         super({ pts, origen })

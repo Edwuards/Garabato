@@ -4,7 +4,7 @@ import typescript from '@rollup/plugin-typescript';
 export default {
   input: 'src/índice.ts',
   output: {
-    dir: 'dist',
+    file:'temp/garabato.js', 
     format: 'iife',
     name: 'Garabato'
   },
