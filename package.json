@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "compilar": "npx rollup -c",
+    "serve": "npx rollup -c rollup.pruebas.js && cd temp && npx http-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
