@@ -1,47 +1,63 @@
 interface IntefazDeGráfico {
-    render(): void,
-    contexto: CanvasRenderingContext2D | false,
-    estado: { [llave: string]: any }
-    canvas: HTMLCanvasElement,
+  render: () => void;
+  contexto: CanvasRenderingContext2D | false;
+  props: { [llave: string]: any };
+  canvas: HTMLCanvasElement;
 }
 
 export class Gráfico implements IntefazDeGráfico {
-    #estado;
-    #canvas;
-    #contexto;
-
-    constructor(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
+  #render: () => void = () => {};
+  #props: { [llave: string]: any } = {};
+  #canvas: HTMLCanvasElement;
+  #contexto: CanvasRenderingContext2D;
+  #prepararContexto() {
+    this.#contexto.save();
+    this.#contexto.beginPath();
+    for (const prop in this.#props) {
+      const esFunción = typeof this.#contexto[prop] == "function";
+      if (!esFunción) {
+        this.#contexto[prop] = this.#props[prop];
+      } else {
+        this.contexto[prop].apply(this.#contexto, this.#props[prop]);
+      }
     }
+  }
+  #finalizarRender() {
+    this.#contexto.closePath();
+    this.#contexto.restore();
+  }
 
-    get contexto() { return this.#contexto }
+  constructor(canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
+  }
 
-    get canvas() { return this.#canvas; }
-    set canvas(elemento: HTMLCanvasElement) {
-        this.#canvas = elemento;
-        this.#contexto = elemento.getContext('2d') || false;
-    }
+  get contexto() {
+    return this.#contexto;
+  }
 
-    get estado() { return this.#estado }
-    set estado(obj: { prop: string, valor: any }) {
-        const { valor, prop } = obj;
-        if (!Boolean(valor)) { delete this.#estado[prop]; }
-        else { this.#estado[prop] = valor }
-    }
+  get canvas() {
+    return this.#canvas;
+  }
+  set canvas(elemento: HTMLCanvasElement) {
+    this.#canvas = elemento;
+    this.#contexto = elemento.getContext("2d");
+  }
 
-    render() {  }
+  get props() {
+    return this.#props;
+  }
+  set props(props: { [llave: string]: any }) {
+    this.#props = props;
+  }
 
-    // prepararContexto() {
-    //     this.#contexto.save()
-    //     this.#contexto.beginPath()
-    //     for (const llave in this.#estado) {
-    //         const esFunción = typeof this.#contexto[llave] == 'function';
-    //         if (!esFunción) { this.#contexto[llave] = this.#estado[llave]; }
-    //     }
-    // }
-
-    // finalizarRender(){
-    //     this.#contexto.closePath();
-    //     this.#contexto.restore();
-    // }
+  get render() {
+    return this.#render;
+  }
+  set render(render: () => void) {
+    this.#render = () => {
+      this.#prepararContexto();
+      render();
+      this.#finalizarRender();
+    };
+  }
 }
